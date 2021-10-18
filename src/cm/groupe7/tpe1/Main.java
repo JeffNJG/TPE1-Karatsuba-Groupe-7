@@ -8,37 +8,18 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Hello world !");
+		System.out.println("Algorithme de Karatsuba");
 		
-		/*Scanner sc = new Scanner(System.in);
-		System.out.println("Entrer la valeur de n :");
-		int n = sc.nextInt();
-		System.out.println(n);
-		sc.close();
-		int[] P = new int[n+1];
-		int[] Q = new int[n+1];
-		for (int i = 0; i<=n; i++) {
-			System.out.println("Definition de P");
-			Scanner s = new Scanner(System.in);
-			System.out.println("Entrer le coefficient du monome de dégré " + i);
-			P[i] = s.nextInt();
-			s.close();
-		}
-		for (int i = 0; i<=n; i++) {
-			System.out.println("Definition de Q");
-			Scanner s = new Scanner(System.in);
-			System.out.println("Entrer le coefficient du monome de dégré " + i);
-			Q[i] = s.nextInt();
-			s.close();
-		}
+		int[] p = {5,2,3,0,1};
+		int[] q = {4,1,4,1,2};
 		
-		int[] res = karatsuba(P, Q);
-		printPolynomial(res);*/
-		
-		int[] p = {4,-2,1};
-		int[] q = {2,0,3};
+		System.out.println("Le premier polynome est : ");
+		printPolynomial(p);
+		System.out.println("\nLe second est : ");
+		printPolynomial(q);
 		
 		int[] r = karatsuba(p, q);
+		System.out.println("\nLe resultat obtenu après multiplication est : ");
 		printPolynomial(r);
 	}
 	
@@ -51,7 +32,6 @@ public class Main {
 	public static int[] karatsuba(int[] A, int[] B) {
 		if (A.length == 2 && B.length == 2) {
 			// cas de base, calcul des coefficients du polynome resultant
-			System.out.println("Cas de base");
 			int[] res = new int[3];
 			int R1 = A[0]*B[0];
 			int R2 = A[1]*B[1];
@@ -63,12 +43,10 @@ public class Main {
 		}
 		
 		// creation des Pi et Qi
-		System.out.println("Creation");
 		int[] A1 = new int[((A.length-1)/2)+1], A2 = new int[((A.length-1)/2)+1];
 		int[] B1 = new int[((B.length-1)/2)+1], B2 = new int[((B.length-1)/2)+1];
 		
 		// Remplissage des Pi et Qi
-		System.out.println("Remplissage");
 		LinkedList<int[]> l = decompose(A);
 		A1 = l.getFirst();
 		A2 = l.getLast();
@@ -77,21 +55,17 @@ public class Main {
 		B2 = l.getLast();
 		
 		// Recursif
-		System.out.println("Appels");
 		int[] R1 = karatsuba(A1, B1);
 		int[] R2 = karatsuba(A2, B2);
 		int[] R3 = karatsuba(sumpoly(A1, A2), sumpoly(B1, B2));
 		
 		// Construction des resultats
-		System.out.println("Resultats");
 		int[] res = new int[A.length+B.length-1];
-		System.out.println(res.length);
 		int [] R4 = difpoly(R3, R1, R2);
 		R4 = mulxpow(R4, (int)((A.length-1)/2));
 		res = sumpoly(R1, R4);
 		R2 = mulxpow(R2, A.length-1);
 		res = sumpoly(res, R2);
-		System.out.println(res.length);
 		return res;
 	}
 	
@@ -267,7 +241,6 @@ public class Main {
 	 */
 	public static void printPolynomial(int[] a) {
 		int i = a.length-1;
-		System.out.println();
 		while (i>=0) {
 			if (i==0) {
 				System.out.print(a[i]);
