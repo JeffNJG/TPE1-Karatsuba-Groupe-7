@@ -18,9 +18,33 @@ public class Main {
 		System.out.println("\nLe second est : ");
 		printPolynomial(q);
 		
-		int[] r = karatsuba(p, q);
-		System.out.println("\nLe resultat obtenu après multiplication est : ");
-		printPolynomial(r);
+		int[] r1 = naif(p, q);
+		int[] r2 = karatsuba(p, q);
+		
+		System.out.println("\nLe resultat obtenu après multiplication par la méthode naive est : ");
+		printPolynomial(r1);
+		
+		System.out.println("\nLe resultat obtenu après multiplication par la méthode de Karatsuba est : ");
+		printPolynomial(r2);
+	}
+	
+	/**
+	 * Algorithme naif pour la multiplication de deux polynomes
+	 * @param a un polynome
+	 * @param b un autre polynome
+	 * @return le produit des deux polynomes
+	 */
+	public static int[] naif(int[] a, int[] b) {
+		int[] res = new int[a.length+b.length-1];
+		for (int i=0; i<res.length; i++) {
+			res[i] = 0;
+		}
+		for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b.length; j++) {
+                res[i + j] += a[i] * b[j];
+            }
+        }
+		return res;
 	}
 	
 	/**
