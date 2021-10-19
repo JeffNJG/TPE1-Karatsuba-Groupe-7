@@ -64,8 +64,8 @@ public class Main {
 		System.out.println("\nLe resultat obtenu après multiplication par la méthode de Karatsuba est : ");
 		printPolynomial(r2);*/
 		
-		int[] p = polynomialGenerator(2048, 10);
-		int[] q = polynomialGenerator(2048, 10);
+		int[] p = polynomialGenerator(nextPowerTwo(10000), 10);
+		int[] q = polynomialGenerator(nextPowerTwo(10000), 10);
 		
 		long d1, f1, d2, f2, dureeNaif, dureeKara;
 		
@@ -389,12 +389,20 @@ public class Main {
 	 * @param o l'ordre de grandeur des entiers. Les entiers générés seront compris entre 0 et o
 	 * @return le polynôme généré
 	 */
-	public static int[] polynomialGenerator(int n, int o) {
-		int[] res = new int[n+1];
+	public static int[] polynomialGenerator(long n, int o) {
+		int[] res = new int[(int) (n+1)];
         Random rand = new Random();
         for (int i = 0; i<n; i++) {
         	res[i] = rand.nextInt(o);
         }
+		return res;
+	}
+	
+	public static long nextPowerTwo(long n) {
+		long res = 1;
+		while (res < n) {
+			res = res*2;
+		}
 		return res;
 	}
 }
