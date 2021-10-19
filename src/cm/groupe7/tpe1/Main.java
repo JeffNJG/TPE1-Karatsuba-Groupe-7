@@ -1,7 +1,5 @@
 package cm.groupe7.tpe1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -14,87 +12,80 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		//System.out.println("Multiplication de deux polynômes");
+		System.out.println("Multiplication de deux polynômes");
 		
-		/*int[] p = polynomialGenerator(1000, 100);
-		int[] q = polynomialGenerator(1000, 100);
+		System.out.println("Entrez la valeur du degré du premier polynôme : ");
+		Scanner in = new Scanner(System.in);
+		int n1 = in.nextInt();
+		System.out.println("Entrez la valeur du degré du second polynôme : ");
+		int n2 = in.nextInt();
+		System.out.println("Entrez le majorant de l'intervalle où les coefficients seront choisis aléatoirement : ");
+		int x = in.nextInt();
+		in.close();
 		
-		try {
-			FileWriter myWriter = new FileWriter("input.txt");
-		    for (int i : p) {
-		    	myWriter.write(i + "\t");
-		    }
-		    myWriter.write("\n");
-		    for (int i : q) {
-		    	myWriter.write(i + "\t");
-		    }
-		    myWriter.close();
-		    System.out.println("Les polynômes sont disponibles.");
-		} catch (IOException e) {
-			System.out.println("Une erreur est survenue.");
-		    e.printStackTrace();
-		}
+		System.out.println("Génération des polynômes...");
+		int[] p = polynomialGenerator(n1, x);
+		int[] q = polynomialGenerator(n2, x);
+		String pText = stringRepresentation(p);
+		String qText = stringRepresentation(q);
+		System.out.println("Génération terminée.");
+		System.out.println("Le premier polynome est : " + pText);
+		System.out.println("\nLe second est : " + qText);
 		
-		try {
-			File myObj = new File("input.txt");
-			System.out.println("Lecture du fichier des polynômes.");
-			Scanner myReader = new Scanner(myObj);
-			while (myReader.hasNextLine()) {
-				String data = myReader.nextLine();
-				System.out.println(data);
+		// On ramène les polynômes au même degré
+		if (p.length != q.length) {
+			if (equals(greater(p, q), p)) {
+				q = mute(q, p.length);
 			}
-			System.out.println("Lecture terminée.");
-			myReader.close();
-		} catch (FileNotFoundException e) {
-			System.out.println("Une erreur est survenue.");
-			e.printStackTrace();
+			if (equals(greater(p, q), q)) {
+				p = mute(p, q.length);
+			}
 		}
 		
-		int[] p = {5,2,3,0,1};
-		int[] q = {4,1,4,1,2};
+		// Si p et q ont des degrés qui ne sont pas des puissances de 2 on complète avec des 0 pour faciliter les calculs
+		if((p.length-1)%2 != 0) {
+			p = mute(p, nextPowerTwo(p.length)+1);
+		}
+		if((q.length-1)%2 != 0) {
+			q = mute(q, nextPowerTwo(q.length)+1);
+		}
 		
-		System.out.println("Le premier polynome est : ");
-		printPolynomial(p);
-		System.out.println("\nLe second est : ");
-		printPolynomial(q);
-		
-		/*System.out.println("\nLe resultat obtenu après multiplication par la méthode naive est : ");
-		printPolynomial(r1);
-		
-		System.out.println("\nLe resultat obtenu après multiplication par la méthode de Karatsuba est : ");
-		printPolynomial(r2);*/
-		
-		int[] p = polynomialGenerator(nextPowerTwo(10000), 10);
-		int[] q = polynomialGenerator(nextPowerTwo(10000), 10);
-		
+		// Variables pour estimer la durée
 		long d1, f1, d2, f2, dureeNaif, dureeKara;
 		
 		d1 = System.nanoTime();
 		int[] r1 = naif(p, q);
 		f1 = System.nanoTime();
+		String r1Text = stringRepresentation(r1);
 		dureeNaif = f1 - d1;
+		System.out.println("Résultat par la méthode naïve : " + r1Text);
 		System.out.println("\nDurée d'exécution de l'algorithme naïf " + dureeNaif);
 		d2 = System.nanoTime();
 		int[] r2 = karatsuba(p, q);
 		f2 = System.nanoTime();
+		String r2Text = stringRepresentation(r2);
 		dureeKara = f2 - d2;
-		System.out.println("Durée d'exécution de l'algorithme de Karatsuba " + dureeKara);
+		System.out.println("Résultat par la méthode de Karatsuba : " + r2Text);
+		System.out.println("\nDurée d'exécution de l'algorithme de Karatsuba " + dureeKara);
 		
-		/*try {
+		// On stocke les résultats dans un fichier
+		try {
 			FileWriter myWriter = new FileWriter("results.txt");
-		    for (int i : r1) {
-		    	myWriter.write(i + "\t");
-		    }
-		    myWriter.write("\n");
-		    for (int i : r2) {
-		    	myWriter.write(i + "\t");
-		    }
-		    myWriter.close();
+		    myWriter.write("MULTIPLICATION DE DEUX POLYNÔMES P(x) ET Q(x) \n");
+			myWriter.write("P(x) = " + pText + "\n");
+			myWriter.write("Q(x) = " + qText + "\n");
+			myWriter.write("Résultat par la méthode naïve : \n");
+			myWriter.write("R1(x) = " + r1Text +"\n");
+			myWriter.write("Temps d'exécution en nanosecondes : " + dureeNaif + "\n");
+			myWriter.write("Résultat par la méthode de Karatsuba : \n");
+			myWriter.write("R2(x) = " + r2Text +"\n");
+			myWriter.write("Temps d'exécution en nanosecondes : " + dureeKara);
+			myWriter.close();
 		    System.out.println("Les résultats sont disponibles dans le fichier results.txt.");
 		} catch (IOException e) {
 			System.out.println("Une erreur est survenue.");
 		    e.printStackTrace();
-		}*/
+		}
 	}
 	
 	/**
@@ -376,7 +367,7 @@ public class Main {
 				i-=1;
 				continue;
 			}
-			res = a[i] + "x^" + i + "+";
+			res = res + a[i] + "x^" + i + "+";
 			i-=1;
 		}
 		return res;
@@ -389,7 +380,7 @@ public class Main {
 	 * @param o l'ordre de grandeur des entiers. Les entiers générés seront compris entre 0 et o
 	 * @return le polynôme généré
 	 */
-	public static int[] polynomialGenerator(long n, int o) {
+	public static int[] polynomialGenerator(int n, int o) {
 		int[] res = new int[(int) (n+1)];
         Random rand = new Random();
         for (int i = 0; i<n; i++) {
@@ -398,8 +389,13 @@ public class Main {
 		return res;
 	}
 	
-	public static long nextPowerTwo(long n) {
-		long res = 1;
+	/**
+	 * Méthode qui permet d'obtenir la puissance de 2 directement supérieure à n
+	 * @param n un entier
+	 * @return la prochaine puissance de 2
+	 */
+	public static int nextPowerTwo(int n) {
+		int res = 1;
 		while (res < n) {
 			res = res*2;
 		}
