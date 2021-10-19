@@ -1,6 +1,12 @@
 package cm.groupe7.tpe1;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Random;
+import java.util.Scanner;
 
 
 public class Main {
@@ -8,7 +14,41 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Algorithme de Karatsuba");
+		//System.out.println("Multiplication de deux polynômes");
+		
+		/*int[] p = polynomialGenerator(1000, 100);
+		int[] q = polynomialGenerator(1000, 100);
+		
+		try {
+			FileWriter myWriter = new FileWriter("input.txt");
+		    for (int i : p) {
+		    	myWriter.write(i + "\t");
+		    }
+		    myWriter.write("\n");
+		    for (int i : q) {
+		    	myWriter.write(i + "\t");
+		    }
+		    myWriter.close();
+		    System.out.println("Les polynômes sont disponibles.");
+		} catch (IOException e) {
+			System.out.println("Une erreur est survenue.");
+		    e.printStackTrace();
+		}
+		
+		try {
+			File myObj = new File("input.txt");
+			System.out.println("Lecture du fichier des polynômes.");
+			Scanner myReader = new Scanner(myObj);
+			while (myReader.hasNextLine()) {
+				String data = myReader.nextLine();
+				System.out.println(data);
+			}
+			System.out.println("Lecture terminée.");
+			myReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("Une erreur est survenue.");
+			e.printStackTrace();
+		}
 		
 		int[] p = {5,2,3,0,1};
 		int[] q = {4,1,4,1,2};
@@ -18,14 +58,43 @@ public class Main {
 		System.out.println("\nLe second est : ");
 		printPolynomial(q);
 		
-		int[] r1 = naif(p, q);
-		int[] r2 = karatsuba(p, q);
-		
-		System.out.println("\nLe resultat obtenu après multiplication par la méthode naive est : ");
+		/*System.out.println("\nLe resultat obtenu après multiplication par la méthode naive est : ");
 		printPolynomial(r1);
 		
 		System.out.println("\nLe resultat obtenu après multiplication par la méthode de Karatsuba est : ");
-		printPolynomial(r2);
+		printPolynomial(r2);*/
+		
+		int[] p = polynomialGenerator(2048, 10);
+		int[] q = polynomialGenerator(2048, 10);
+		
+		long d1, f1, d2, f2, dureeNaif, dureeKara;
+		
+		d1 = System.nanoTime();
+		int[] r1 = naif(p, q);
+		f1 = System.nanoTime();
+		dureeNaif = f1 - d1;
+		System.out.println("\nDurée d'exécution de l'algorithme naïf " + dureeNaif);
+		d2 = System.nanoTime();
+		int[] r2 = karatsuba(p, q);
+		f2 = System.nanoTime();
+		dureeKara = f2 - d2;
+		System.out.println("Durée d'exécution de l'algorithme de Karatsuba " + dureeKara);
+		
+		/*try {
+			FileWriter myWriter = new FileWriter("results.txt");
+		    for (int i : r1) {
+		    	myWriter.write(i + "\t");
+		    }
+		    myWriter.write("\n");
+		    for (int i : r2) {
+		    	myWriter.write(i + "\t");
+		    }
+		    myWriter.close();
+		    System.out.println("Les résultats sont disponibles dans le fichier results.txt.");
+		} catch (IOException e) {
+			System.out.println("Une erreur est survenue.");
+		    e.printStackTrace();
+		}*/
 	}
 	
 	/**
@@ -282,6 +351,51 @@ public class Main {
 			System.out.print(a[i] + "x^" + i + "+");
 			i-=1;
 		}
+	}
+	
+	/**
+	 * Nous renvoit une représentation textuelle du polynome
+	 * Celle qu'on écrira plus tard dans le fichier
+	 * @param a : le tableau de coefficients représentant le polynôme
+	 * @return La représentation
+	 */
+	public static String stringRepresentation(int[] a) {
+		int i = a.length-1;
+		String res = "";
+		while (i>=0) {
+			if (i==0) {
+				res += a[i];
+				break;
+			}
+			if(a[i] == 0) {
+				i -= 1;
+				continue;
+			}
+			if(a[i] == 1) {
+				res = res + "x^" + i + "+";
+				i-=1;
+				continue;
+			}
+			res = a[i] + "x^" + i + "+";
+			i-=1;
+		}
+		return res;
+	}
+	
+	/**
+	 * On génère un polynôme avec des entiers de manière aléatoire, le but étant de construire rapidement un polynôme de n'importe quel ordre
+	 * L'objet Random permet de créer un objet aléatoire et sa méthode nextInt nous permet d'obtenir un entier aléatoire
+	 * @param n la degré du polynôme qu'on veut obtenir
+	 * @param o l'ordre de grandeur des entiers. Les entiers générés seront compris entre 0 et o
+	 * @return le polynôme généré
+	 */
+	public static int[] polynomialGenerator(int n, int o) {
+		int[] res = new int[n+1];
+        Random rand = new Random();
+        for (int i = 0; i<n; i++) {
+        	res[i] = rand.nextInt(o);
+        }
+		return res;
 	}
 }
 
